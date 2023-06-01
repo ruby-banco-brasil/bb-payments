@@ -11,7 +11,6 @@ Swagger Codegen version: 3.0.24
 
 # Common files
 require 'bb_oauth'
-require 'bb_payments/api/base_api'
 require 'bb_payments/api_client'
 require 'bb_payments/api_error'
 require 'bb_payments/version'
@@ -61,6 +60,7 @@ require 'bb_payments/models/root_type_for_returned_payments_response_object'
 require 'bb_payments/models/root_type_for_slips_details_object'
 
 # APIs
+require 'bb_payments/api/base_api'
 require 'bb_payments/api/transfers'
 require 'bb_payments/api/transfers_pix'
 require 'bb_payments/api/payments'
