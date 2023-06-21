@@ -25,6 +25,7 @@ module BancoBrasilPayments
     include BaseApi
     include Payments
     include Transfers
+    include TransfersPix
 
     attr_accessor :api_client, :gw_app_key
 
