@@ -35,10 +35,11 @@ module BancoBrasilPayments::Payments
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
                                     opts: opts,
+                                    body: {
+                                      numeroRequisicao: id,
+                                      indicadorFloat: float ? 'S' : 'N'
+                                    },
                                     return_type: 'Hash<String, String>')
-    client_opts[:body][:'numeroRequisicao'] = id
-    client_opts[:body][:'indicadorFloat'] = float ? 'S' : 'N'
-
     call_api_client(api_client: api_client,
                     http_method: :POST,
                     path: '/liberar-pagamentos',

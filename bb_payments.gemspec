@@ -6,8 +6,8 @@ Gem::Specification.new do |s|
   s.name        = "bb_payments"
   s.version     = BancoBrasilPayments::VERSION
   s.platform    = Gem::Platform::RUBY
-  s.authors     = ["Roque"]
-  s.email       = ["roque.rafael@gmail.com"]
+  s.authors     = ["Roque", "Hent"]
+  s.email       = ["roque.rafael@gmail.com","tech@hent.com.br"]
   s.homepage    = "https://github.com/ruby-banco-brasil/bb-payments"
   s.summary     = "A ruby wrapper for Banco do Brasil VPN Payments"
   s.description = "This gem maps to the BB Payments API"
