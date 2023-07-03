@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.homepage    = "https://github.com/ruby-banco-brasil/bb-payments"
   s.summary     = "A ruby wrapper for Banco do Brasil VPN Payments"
   s.description = "This gem maps to the BB Payments API"
-  s.license     = "Unlicense"
+  s.license     = "MIT"
   s.required_ruby_version = ">= 1.9"
 
   s.add_runtime_dependency 'typhoeus', '~> 1.0', '>= 1.0.1'

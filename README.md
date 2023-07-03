@@ -389,3 +389,7 @@ Class | Method | HTTP request | Description
 - **Scopes**: 
   - : 
 
+License
+-------
+
+Copyright (c) Hent.  MIT License.
