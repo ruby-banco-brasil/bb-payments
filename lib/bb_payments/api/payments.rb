@@ -112,4 +112,21 @@ module BancoBrasilPayments::Payments
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
+
+  # GET /transferencias/{id}
+  # Consultar um Pagamento Específico de um Lote de Transferências.
+  def find_payment(id, opts = {})
+    validations(api_client: api_client, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts,
+                                    return_type: 'FindPaymentResponse')
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/transferencias/#{id.to_s}",
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
 end
