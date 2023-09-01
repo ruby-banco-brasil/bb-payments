@@ -17,7 +17,7 @@ module BancoBrasilPayments
     attr_accessor :id # id	|| integer($int64)
 
     # Data em que o cliente enviou ao Banco a requisição de pagamento em lote.
-    attr_accessor :request_date # dataPagamento | string
+    attr_accessor :payment_date # dataPagamento | string
 
     # Valor total dos Pagamentos.
     attr_accessor :payment_value # valorPagamento | 	number($double)
@@ -29,7 +29,7 @@ module BancoBrasilPayments
     def self.attribute_map
       {
         id: :id,
-        request_date: :dataPagamento,
+        payment_date: :dataPagamento,
         payment_value: :valorPagamento,
         devolution_list: :listaDevolucao,
         payment_state: :estadoPagamento
@@ -40,7 +40,7 @@ module BancoBrasilPayments
     def self.openapi_types
       {
         id: :Integer,
-        request_date: :NumberDate,
+        payment_date: :NumberDate,
         payment_value: :Float,
         devolution_list: 'Array<Devolution>',
         payment_state: :String
