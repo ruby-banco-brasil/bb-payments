@@ -70,8 +70,7 @@ module BancoBrasilPayments::Payments
   # inclusive pagamentos e transferências relacionados ao PIX. Detre as informações consulatas estão o
   # motivo e valores devolvidos.
   def consult_payments(start_date, end_date, opts = {})
-    validations(api_client: api_client, body: body, validate_body: true,
-                required_params: { start_date: start_date, end_date: end_date })
+    validations(api_client: api_client, required_params: { start_date: start_date, end_date: end_date })
 
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
@@ -90,7 +89,7 @@ module BancoBrasilPayments::Payments
     query_params[:'index'] = opts[:'index'] if !opts[:'index'].nil?
 
     call_api_client(api_client: api_client,
-                    http_method: :POST,
+                    http_method: :GET,
                     path: '/pagamentos',
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
