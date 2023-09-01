@@ -48,4 +48,21 @@ module BancoBrasilPayments::TransfersPix
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
+
+  # GET /pix/{id}
+  # # Detalha todos os dados de um pagamento efetuado na modalidade PIX.
+  def find_payment_pix(id, opts = {})
+    validations(api_client: api_client, body: body, validate_body: true, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts,
+                                    return_type: 'FindPaymentPixResponse')
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/pix/#{id}",
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
 end
