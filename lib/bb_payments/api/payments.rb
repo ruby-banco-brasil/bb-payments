@@ -95,6 +95,39 @@ module BancoBrasilPayments::Payments
                     client_opts: client_opts)
   end
 
+  # GET /lancamentos-periodo Consultar Lancamentos
+  def consult_entries(debit_branch_office, debit_current_account, check_digits_debit_current_account, start_date,
+                      opts = {})
+    validations(api_client: api_client, required_params:
+      { debit_branch_office: debit_branch_office,
+        debit_current_account: debit_current_account,
+        check_digits_debit_current_account: check_digits_debit_current_account,
+        start_date: start_date })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts,
+                                    return_type: 'FindReleasesResponse')
+
+    # query parameters
+    query_params = client_opts[:query_params]
+    query_params[@api_client.config.app_key_name.to_sym] = gw_app_key
+    query_params[:numeroAgenciaDebito] = debit_branch_office
+    query_params[:numeroContaCorrenteDebito] = debit_current_account
+    query_params[:digitoVerificadorContaCorrenteDebito] = check_digits_debit_current_account
+    query_params[:dataInicialdeEnviodaRequisição] = start_date.strftime('%d%m%Y').to_i
+    query_params[:dataFinaldeEnviodaRequisição] = opts[:'end_date'].strftime('%d%m%Y').to_i if !opts[:'end_date'].nil?
+    query_params[:codigodoEstadodoPagamento] = opts[:'payment_state_code'].to_i if !opts[:'payment_state_code'].nil?
+    query_params[:codigoProduto] = opts[:'product_code'].to_i if !opts[:'product_code'].nil?
+    query_params[:numeroDaPosicaoDePesquisa] = opts[:'index'].to_i if !opts[:'index'].nil?
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: '/lancamentos-periodo',
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
   # GET /{id}
   # Consulta um lote de pagamentos.
   def find_batch_payments(id, opts = {})
