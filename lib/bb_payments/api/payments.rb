@@ -79,14 +79,17 @@ module BancoBrasilPayments::Payments
     # query parameters
     query_params = client_opts[:query_params]
     query_params[@api_client.config.app_key_name.to_sym] = gw_app_key
-    query_params[:'dataInicio'] = start_date.strftime('%d%m%Y').to_i
-    query_params[:'dataFim'] = end_date.strftime('%d%m%Y').to_i
-    query_params[:'agenciaDebito'] = opts[:'debit_branch_office'] if !opts[:'debit_branch_office'].nil?
-    query_params[:'contaCorrenteDebito'] = opts[:'debit_current_account'] if !opts[:'debit_current_account'].nil?
-    query_params[:'digitoVerificadorContaCorrente'] = opts[:'check_digits_debit_current_account'] if !opts[:'check_digits_debit_current_account'].nil?
-    query_params[:'numeroContratoPagamento'] = opts[:'payment_contract'] if !opts[:'payment_contract'].nil?
-    query_params[:'estadoPagamento'] = opts[:'payment_state'] if !opts[:'payment_state'].nil?
-    query_params[:'index'] = opts[:'index'] if !opts[:'index'].nil?
+    query_params[:dataInicio] = start_date.strftime('%d%m%Y').to_i
+    query_params[:dataFim] = end_date.strftime('%d%m%Y').to_i
+    query_params[:agenciaDebito] = opts[:debit_branch_office] unless opts[:debit_branch_office].nil?
+    query_params[:contaCorrenteDebito] = opts[:debit_current_account] unless opts[:debit_current_account].nil?
+    unless opts[:check_digits_debit_current_account].nil?
+      query_params[:digitoVerificadorContaCorrente] =
+        opts[:check_digits_debit_current_account]
+    end
+    query_params[:numeroContratoPagamento] = opts[:payment_contract] unless opts[:payment_contract].nil?
+    query_params[:estadoPagamento] = opts[:payment_state] unless opts[:payment_state].nil?
+    query_params[:index] = opts[:index] unless opts[:index].nil?
 
     call_api_client(api_client: api_client,
                     http_method: :GET,
@@ -116,10 +119,10 @@ module BancoBrasilPayments::Payments
     query_params[:numeroContaCorrenteDebito] = debit_current_account
     query_params[:digitoVerificadorContaCorrenteDebito] = check_digits_debit_current_account
     query_params[:dataInicialdeEnviodaRequisição] = start_date.strftime('%d%m%Y').to_i
-    query_params[:dataFinaldeEnviodaRequisição] = opts[:'end_date'].strftime('%d%m%Y').to_i if !opts[:'end_date'].nil?
-    query_params[:codigodoEstadodoPagamento] = opts[:'payment_state_code'].to_i if !opts[:'payment_state_code'].nil?
-    query_params[:codigoProduto] = opts[:'product_code'].to_i if !opts[:'product_code'].nil?
-    query_params[:numeroDaPosicaoDePesquisa] = opts[:'index'].to_i if !opts[:'index'].nil?
+    query_params[:dataFinaldeEnviodaRequisição] = opts[:end_date].strftime('%d%m%Y').to_i unless opts[:end_date].nil?
+    query_params[:codigodoEstadodoPagamento] = opts[:payment_state_code].to_i unless opts[:payment_state_code].nil?
+    query_params[:codigoProduto] = opts[:product_code].to_i unless opts[:product_code].nil?
+    query_params[:numeroDaPosicaoDePesquisa] = opts[:index].to_i unless opts[:index].nil?
 
     call_api_client(api_client: api_client,
                     http_method: :GET,
@@ -157,7 +160,23 @@ module BancoBrasilPayments::Payments
 
     call_api_client(api_client: api_client,
                     http_method: :GET,
-                    path: "/transferencias/#{id.to_s}",
+                    path: "/transferencias/#{id}",
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
+  # GET /{id}/solicitacao
+  # Consulta sobre uma solicitação de requisição para efetuar um lote de pagamentos via transferência e os pagamentos deste lote.
+  def find_batch_transfer(id, opts = {})
+    validations(api_client: api_client, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts)
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/#{id}/solicitacao",
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
