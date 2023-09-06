@@ -35,17 +35,33 @@ module BancoBrasilPayments::TransfersPix
   # GET  /lotes-transferencias-pix/{id}/solicitacao
   # # Consultar Solicitação de Transferências PIX
   def find_batch_transfer_pix(id, opts = {})
+    validations(api_client: api_client, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts)
+    client_opts[:query_params][:'index'] = opts[:'index'] if !opts[:'index'].nil?
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/lotes-transferencias-pix/#{id}/solicitacao",
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
+  # GET /pix/{id}
+  # # Detalha todos os dados de um pagamento efetuado na modalidade PIX.
+  def find_payment_pix(id, opts = {})
     validations(api_client: api_client, body: body, validate_body: true, required_params: { id: id })
 
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
                                     opts: opts,
-                                    body: @api_client.object_to_http_body(body))
-    client_opts[:query_params][:'index'] = opts[:'index'] if !opts[:'index'].nil?
+                                    return_type: 'FindPaymentPixResponse')
 
     call_api_client(api_client: api_client,
-                    http_method: :POST,
-                    path: "/lotes-transferencias-pix/#{id}/solicitacao",
+                    http_method: :GET,
+                    path: "/pix/#{id}",
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end

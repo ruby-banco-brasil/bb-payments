@@ -70,8 +70,7 @@ module BancoBrasilPayments::Payments
   # inclusive pagamentos e transferências relacionados ao PIX. Detre as informações consulatas estão o
   # motivo e valores devolvidos.
   def consult_payments(start_date, end_date, opts = {})
-    validations(api_client: api_client, body: body, validate_body: true,
-                required_params: { start_date: start_date, end_date: end_date })
+    validations(api_client: api_client, required_params: { start_date: start_date, end_date: end_date })
 
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
@@ -80,18 +79,54 @@ module BancoBrasilPayments::Payments
     # query parameters
     query_params = client_opts[:query_params]
     query_params[@api_client.config.app_key_name.to_sym] = gw_app_key
-    query_params[:'dataInicio'] = start_date.strftime('%d%m%Y').to_i
-    query_params[:'dataFim'] = end_date.strftime('%d%m%Y').to_i
-    query_params[:'agenciaDebito'] = opts[:'debit_branch_office'] if !opts[:'debit_branch_office'].nil?
-    query_params[:'contaCorrenteDebito'] = opts[:'debit_current_account'] if !opts[:'debit_current_account'].nil?
-    query_params[:'digitoVerificadorContaCorrente'] = opts[:'check_digits_debit_current_account'] if !opts[:'check_digits_debit_current_account'].nil?
-    query_params[:'numeroContratoPagamento'] = opts[:'payment_contract'] if !opts[:'payment_contract'].nil?
-    query_params[:'estadoPagamento'] = opts[:'payment_state'] if !opts[:'payment_state'].nil?
-    query_params[:'index'] = opts[:'index'] if !opts[:'index'].nil?
+    query_params[:dataInicio] = start_date.strftime('%d%m%Y').to_i
+    query_params[:dataFim] = end_date.strftime('%d%m%Y').to_i
+    query_params[:agenciaDebito] = opts[:debit_branch_office] unless opts[:debit_branch_office].nil?
+    query_params[:contaCorrenteDebito] = opts[:debit_current_account] unless opts[:debit_current_account].nil?
+    unless opts[:check_digits_debit_current_account].nil?
+      query_params[:digitoVerificadorContaCorrente] =
+        opts[:check_digits_debit_current_account]
+    end
+    query_params[:numeroContratoPagamento] = opts[:payment_contract] unless opts[:payment_contract].nil?
+    query_params[:estadoPagamento] = opts[:payment_state] unless opts[:payment_state].nil?
+    query_params[:index] = opts[:index] unless opts[:index].nil?
 
     call_api_client(api_client: api_client,
-                    http_method: :POST,
+                    http_method: :GET,
                     path: '/pagamentos',
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
+  # GET /lancamentos-periodo Consultar Lancamentos
+  def consult_entries(debit_branch_office, debit_current_account, check_digits_debit_current_account, start_date,
+                      opts = {})
+    validations(api_client: api_client, required_params:
+      { debit_branch_office: debit_branch_office,
+        debit_current_account: debit_current_account,
+        check_digits_debit_current_account: check_digits_debit_current_account,
+        start_date: start_date })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts,
+                                    return_type: 'FindReleasesResponse')
+
+    # query parameters
+    query_params = client_opts[:query_params]
+    query_params[@api_client.config.app_key_name.to_sym] = gw_app_key
+    query_params[:numeroAgenciaDebito] = debit_branch_office
+    query_params[:numeroContaCorrenteDebito] = debit_current_account
+    query_params[:digitoVerificadorContaCorrenteDebito] = check_digits_debit_current_account
+    query_params[:dataInicialdeEnviodaRequisição] = start_date.strftime('%d%m%Y').to_i
+    query_params[:dataFinaldeEnviodaRequisição] = opts[:end_date].strftime('%d%m%Y').to_i unless opts[:end_date].nil?
+    query_params[:codigodoEstadodoPagamento] = opts[:payment_state_code].to_i unless opts[:payment_state_code].nil?
+    query_params[:codigoProduto] = opts[:product_code].to_i unless opts[:product_code].nil?
+    query_params[:numeroDaPosicaoDePesquisa] = opts[:index].to_i unless opts[:index].nil?
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: '/lancamentos-periodo',
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
@@ -109,6 +144,39 @@ module BancoBrasilPayments::Payments
     call_api_client(api_client: api_client,
                     http_method: :GET,
                     path: id.to_s,
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
+  # GET /transferencias/{id}
+  # Consultar um Pagamento Específico de um Lote de Transferências.
+  def find_payment(id, opts = {})
+    validations(api_client: api_client, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts,
+                                    return_type: 'FindPaymentResponse')
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/transferencias/#{id}",
+                    data_only: opts.fetch(:data_only, true),
+                    client_opts: client_opts)
+  end
+
+  # GET /{id}/solicitacao
+  # Consulta sobre uma solicitação de requisição para efetuar um lote de pagamentos via transferência e os pagamentos deste lote.
+  def find_batch_transfer(id, opts = {})
+    validations(api_client: api_client, required_params: { id: id })
+
+    client_opts = build_client_opts(api_client: api_client,
+                                    gw_app_key: gw_app_key,
+                                    opts: opts)
+
+    call_api_client(api_client: api_client,
+                    http_method: :GET,
+                    path: "/#{id}/solicitacao",
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
