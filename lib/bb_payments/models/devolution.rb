@@ -25,7 +25,7 @@ module BancoBrasilPayments
     def self.openapi_types
       {
         reason_code: :Integer,
-        devolution_date: :NumberDate,
+        devolution_date: :String,
         devolution_value: :Float
       }
     end
