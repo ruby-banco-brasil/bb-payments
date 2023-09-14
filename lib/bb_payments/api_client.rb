@@ -181,7 +181,8 @@ module BancoBrasilPayments
     # @param [Response] response HTTP response
     # @param [String] return_type some examples: "User", "Array<User>", "Hash<String, Integer>"
     def deserialize(response, return_type)
-      body = response.body
+      # removing the null byte from string using the octal. It has to by with double quote string
+      body = response.body.delete("\x0")
 
       # handle file downloading - return the File instance processed in request callbacks
       # note that response body is empty when the file is written in chunks in request on_body callback

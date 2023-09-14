@@ -12,10 +12,10 @@ Gem::Specification.new do |s|
   s.summary     = "A ruby wrapper for Banco do Brasil VPN Payments"
   s.description = "This gem maps to the BB Payments API"
   s.license     = "MIT"
-  s.required_ruby_version = ">= 1.9"
+  s.required_ruby_version = ">= 2.5"
 
-  s.add_runtime_dependency 'typhoeus', '~> 1.0', '>= 1.0.1'
-  s.add_runtime_dependency 'json', '~> 2.1', '>= 2.1.0'
+  s.add_runtime_dependency 'typhoeus', '~> 1.4', '>= 1.0.1'
+  s.add_runtime_dependency 'json', '~> 2.6', '>= 2.1.0'
   s.add_runtime_dependency 'bb_oauth', '~> 1.0'
 
   s.add_development_dependency 'rspec', '~> 3.6', '>= 3.6.0'
