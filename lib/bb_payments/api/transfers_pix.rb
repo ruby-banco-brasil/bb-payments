@@ -52,7 +52,7 @@ module BancoBrasilPayments::TransfersPix
   # GET /pix/{id}
   # # Detalha todos os dados de um pagamento efetuado na modalidade PIX.
   def find_payment_pix(id, opts = {})
-    validations(api_client: api_client, body: body, validate_body: true, required_params: { id: id })
+    validations(api_client: api_client, required_params: { id: id })
 
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
