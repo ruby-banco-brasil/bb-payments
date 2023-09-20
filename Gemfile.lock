@@ -1,10 +1,10 @@
 PATH
   remote: .
   specs:
-    bb_payments (0.1.7)
+    bb_payments (0.2.0)
       bb_oauth (~> 1.0)
       json (~> 2.6, >= 2.1.0)
-      typhoeus (~> 1.0, >= 1.0.1)
+      typhoeus (~> 1.4, >= 1.0.1)
 
 GEM
   remote: https://rubygems.org/
