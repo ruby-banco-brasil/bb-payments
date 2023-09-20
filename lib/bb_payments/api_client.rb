@@ -307,7 +307,7 @@ module BancoBrasilPayments
 
     def valid_token?
       access_token_requested_at &&
-        (Time.zone.now - access_token_requested_at) > TOKEN_EXPIRE_TIME
+        (Time.zone.now - access_token_requested_at) < TOKEN_EXPIRE_TIME
     end
 
     def renew_token
