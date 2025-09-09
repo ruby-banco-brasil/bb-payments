@@ -50,7 +50,7 @@ module BancoBrasilPayments::Payments
   # POST /cancelar-pagamentos Cancelar Lote de Pagamentos
   # Efetua o Cancelamento de um Lote de Pagamentos
   def cancel_payments(body, opts = {})
-    validations(api_client: api_client, body: body, validate_body: true)
+    # validations(api_client: api_client, body: body, validate_body: true)
 
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
