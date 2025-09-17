@@ -181,10 +181,13 @@ module BancoBrasilPayments::Payments
                     client_opts: client_opts)
   end
 
-  def change_date(id, original_date, new_date, opts = {})
+  def change_date(id, original_date, new_date, debit_branch_office, debit_current_account, check_digits_debit_current_account, opts = {})
     body = {
       dataOriginalPagamento: original_date.strftime('%d%m%Y'),
       dataNovoPagamento: new_date.strftime('%d%m%Y'),
+      numeroAgenciaDebito: debit_branch_office,
+      numeroContaCorrenteDebito: debit_current_account,
+      digitoVerificadorContaCorrenteDebito: check_digits_debit_current_account
     }
     client_opts = build_client_opts(api_client: api_client,
                                     gw_app_key: gw_app_key,
