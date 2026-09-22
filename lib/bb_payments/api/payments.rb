@@ -8,7 +8,7 @@
 [Y] - [POST /cancelar-pagamentos] => Cancelar Lote de Pagamentos
 [Y] - [GET /pagamentos]           => Consultar Pagamentos
 [N] - [GET /transferencias/{id}]  => Consultar um Pagamento Específico de um Lote de Transferências
-[Y] - [GET /{id}]                 => Consultar um Lote de Pagamentos
+[Y] - [GET /requisicoes/{id}]     => Consultar um Lote de Pagamentos
 [N] - [GET /{id}/solicitacao]     => Consultar sobre a Solicitação de um Lote de Pagamentos
 
 =end
@@ -131,8 +131,9 @@ module BancoBrasilPayments::Payments
                     client_opts: client_opts)
   end
 
-  # GET /{id}
+  # GET /requisicoes/{id}
   # Consulta um lote de pagamentos.
+  # Substitui o antigo GET /{id}, descontinuado pelo BB (HTTP 410).
   def find_batch_payments(id, opts = {})
     validations(api_client: api_client, required_params: { id: id })
 
@@ -143,7 +144,7 @@ module BancoBrasilPayments::Payments
 
     call_api_client(api_client: api_client,
                     http_method: :GET,
-                    path: id.to_s,
+                    path: "/requisicoes/#{id}",
                     data_only: opts.fetch(:data_only, true),
                     client_opts: client_opts)
   end
